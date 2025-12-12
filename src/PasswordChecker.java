@@ -1,31 +1,47 @@
 import java.util.Scanner;
+
 public class PasswordChecker {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        RuleLength rule = new RuleLength();
+        RuleContent ruleRule = new RuleContent();
         System.out.println("Bitte Passwort eingeben: ");
-        String password = sc.nextLine();
-        // Flag: Startwert true, wird nur false gesetzt, wenn ein ungültiges Zeichen gefunden wird
-        boolean langPassend = true;
-        // Prüfe zuerst die Länge des Passworts
-        if (password.length() >= 8 && password.length() <= 20) {
-            // Gehe jedes Zeichen einzeln durch
-            for (int j = 0; j < password.length(); j++) {
-                // Prüfe: Das Zeichen ist ungültig, wenn es weder eine Ziffer noch ein Buchstabe ist
-                // (wichtige NICHT-Logik: !Digit && !Letter)
-                if (!Character.isDigit(password.charAt(j)) && !Character.isLetter(password.charAt(j))) {
-                    langPassend = false;
-                    break;
-                }
+
+        String password;
+
+        while (true) {
+            password = sc.nextLine();
+
+            if (rule.CheckLength(password) && ruleRule.CheckContent(password)) {
+                System.out.println("Gute Länge und passende Zeichen!");
+                break;
             }
-            if (langPassend != false) {
-                System.out.println("Gültig");
-            } else if (langPassend == false) {
-                System.out.println("Passwort ist zwar passend von der Länge, aber es beinhaltet ungültige Zeichen.");
+            else if (!rule.CheckLength(password) && ruleRule.CheckContent(password)) {
+                System.out.println("Ungültige Länge aber passende Zeichen!");
             }
-        } else if (password.length() > 20) {
-            System.out.println("Das Passwort ist leider zu lang");
-        } else if (password.length() < 8) {
-            System.out.println("Das Passwort ist leider zu kurz");
+            else if (rule.CheckLength(password) && !ruleRule.CheckContent(password)) {
+                System.out.println("Passende Länge aber ungültige Zeichen!");
+            }
+            else {
+                System.out.println("Ungültige Länge und ungültige Zeichen!");
+            }
+            System.out.println("Bitte ein neues Passwort eingeben: ");
         }
+    }
+}
+class RuleLength {
+    public boolean CheckLength(String password) {
+        return password.length() >= 8 && password.length() <= 20;
+    }
+}
+class RuleContent {
+    public boolean CheckContent(String password) {
+        for (int i = 0; i < password.length(); i++) {
+            if (!Character.isLetter(password.charAt(i)) &&
+                    !Character.isDigit(password.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
