@@ -9,17 +9,17 @@ public class PasswordChecker {
         while (true) {
             password = sc.nextLine();
             if (rule.CheckLength(password) && ruleRule.CheckContent(password)) {
-                System.out.println("Gute Länge und passende Zeichen!");
+                System.out.println("Super");
                 break;
             }
             else if (!rule.CheckLength(password) && ruleRule.CheckContent(password)) {
-                System.out.println("Ungültige Länge aber passende Zeichen!");
+                System.out.println("Ungültige Länge super Zeichen!");
             }
             else if (rule.CheckLength(password) && !ruleRule.CheckContent(password)) {
-                System.out.println("Passende Länge aber ungültige Zeichen!");
+                System.out.println("Schlechtes Passwort");
             }
             else {
-                System.out.println("Ungültige Länge und ungültige Zeichen!");
+                System.out.println("Ungültige Länge und schlechte Zeichen");
             }
             System.out.println("Bitte ein neues Passwort eingeben: ");
         }
@@ -33,15 +33,28 @@ class RuleLength {
 }
 class RuleContent {
     public boolean CheckContent(String password) {
-        String allowedSpecialCharacters = "§$%&-*!";
+        boolean hasDigit = false;
+        boolean hasLetter = false;
+        boolean hasSpecials = false;
+        boolean passend = false;
+        String specials = "§$%&/-!";
         for (int i = 0; i < password.length(); i++) {
-            if (!Character.isLetter(password.charAt(i)) &&
-                    !Character.isDigit(password.charAt(i)) &&
-                    allowedSpecialCharacters.indexOf(password.charAt(i)) == -1) {
+            char c = password.charAt(i);
+            if (Character.isLetter(c)) {
+                hasLetter = true;
+            }
+            if (Character.isDigit(c)) {
+                hasDigit = true;
+            }
+            if(specials.indexOf(c) != -1) {
+                hasSpecials = true;
+            }
+            else {
                 return false;
             }
         }
-        return true;
+        passend = hasLetter && hasDigit && hasSpecials;
+        return passend;
+
     }
 }
-
